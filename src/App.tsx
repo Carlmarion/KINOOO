@@ -11,15 +11,21 @@ import Root from './routes/root';
 function App() {
 
 const [movies, setMovies] = useState<MovieData[]>([]);
-const [favorites, setFavorites] = useState<MovieData[]>([]);
+const storedFavorites = localStorage.getItem('favorites');
+const [favorites, setFavorites] = useState<MovieData[]>(storedFavorites?  JSON.parse(storedFavorites) : []);
 
-const toggleFavorite = (movie: any) => {
+const toggleFavorite = (movie: MovieData) => {
 if (favorites.some(favorite => favorite.original_title === movie.original_title)) {
   setFavorites(favorites.filter(favorite => favorite.original_title !== movie.original_title));
 } else {
   setFavorites([...favorites, movie]);
 }
 }
+
+useEffect(() => {
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+
+}, [favorites]);
 
 
 useEffect(() => {
